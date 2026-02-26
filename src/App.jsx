@@ -1,4 +1,4 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import './App.css'
 const letters = "abcdefghijklmnopqrstuvwxyz"
 const numbers = "0123456789"
@@ -14,6 +14,22 @@ function App() {
  const [desc, setDesc] = useState("") 
 
 
+useEffect(() => {fullNameRef.current?.focus()}, [])
+
+const handleReset = () => {
+  
+  setUsername("")
+  setPassword("")
+  setDesc("")
+
+  if (fullNameRef.current) fullNameRef.current.value = ""
+  if (specRef.current) specRef.current.value = ""  
+  if (expRef.current) expRef.current.value = ""
+}
+
+const scrollToTop = () => {
+  window.scrollTo({ top: 0, behavior: "smooth" })
+}
  const validateUsername = (value) => {
     if (value.length === 0) return ""
     if (value.length < 6) return "Username troppo corto (min 6 caratteri)"
@@ -124,8 +140,11 @@ const validateDescription = (value) => {
         onChange={(e) => setDesc(e.target.value)}></textarea>
         {desc !== "" && (descriptionError !== "" ? (<p style={{ color: "red" }}>{descriptionError}</p>) :
         (<p style={{ color: "green" }}>Descrizione valida</p>))}</div>
-        <button type='submit'>Invia il form</button>
+        <button type='submit'>Invia il form</button> <button type='button' onClick={handleReset}>Reset</button>
       </form>
+      <button type="button" onClick={scrollToTop} className="scrollTopBtn" aria-label="Torna su">
+  ↑
+</button>
     </>
   )
 }

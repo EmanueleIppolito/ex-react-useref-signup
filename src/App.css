@@ -40,3 +40,11 @@
 .read-the-docs {
   color: #888;
 }
+.scrollTopBtn{
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 12px 16px;
+  border-radius: 999px;
+  cursor: pointer;
+}
