@@ -1,16 +1,16 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
+import './App.css'
 const letters = "abcdefghijklmnopqrstuvwxyz"
 const numbers = "0123456789"
 const symbols = "!@#$%^&*()-_=+[]{}|;:'\\,.<>?/`~"
 
-import './App.css'
 
 function App() {
- const [fullName, setFullName] = useState("")
+ const fullNameRef = useRef(null)
  const [username, setUsername] = useState("")
  const [password, setPassword] = useState("")
- const [spec, setSpec] = useState("")
- const [exp, setExp] = useState("")
+ const specRef = useRef(null)
+ const expRef = useRef(null)
  const [desc, setDesc] = useState("") 
 
 
@@ -67,15 +67,17 @@ const validateDescription = (value) => {
 }
  const handleSubmit = (e) => {
   e.preventDefault()
-  
+  const fullNameValue = fullNameRef.current?.value ?? ""
+  const specValue = specRef.current?.value ?? ""
+  const expValue = expRef.current?.value ?? ""
   const hasEmptyfields =  
-    fullName.trim() === "" ||
+    fullNameValue.trim() === "" ||
     username.trim() === "" ||
     password.trim() === "" ||
-    spec === "" ||
-    exp.trim() === "" ||
+    specValue === "" ||
+    expValue.trim() === "" ||
     desc.trim() === ""
-  const years = Number(exp) 
+  const years = Number(expValue) 
   const hasInvalidYears = Number.isNaN(years) || years <= 0
 
   if(hasEmptyfields){
@@ -86,7 +88,7 @@ const validateDescription = (value) => {
     console.error("Gli anni di esperienza devono essere un numero positivo")
     return
   }
-  console.log({fullName, username, password, spec, years, desc})
+  console.log({fullNameValue, username, password, specValue, years, desc})
  }
 
   const usernameError = validateUsername(username)
@@ -95,9 +97,7 @@ const validateDescription = (value) => {
   return (
     <>
       <form onSubmit={handleSubmit}>
-        <div><input type='text' placeholder='Nome completo'
-        value={fullName}
-        onChange={(e) => setFullName(e.target.value)}></input></div>
+        <div><input type='text' placeholder='Nome completo' ref={fullNameRef}></input></div>
         <div><input type='text' placeholder='Username'
         value={username}
         onChange={(e) => setUsername(e.target.value)}></input>
@@ -109,18 +109,16 @@ const validateDescription = (value) => {
         <div>
           {password !== "" && (passwordError !== "" ? (
           <p style={{ color: "red" }}>{passwordError}</p>) : 
-          (<p style={{ color: "green" }}>Password valida</p>))}
-        <select 
-        value={spec}
-        onChange={(e) => setSpec(e.target.value)}>
+          (<p style={{ color: "green" }}>Password valida</p>))}</div>
+        <div><select 
+        defaultValue={""}
+        ref={specRef}>
           <option value="" disabled hidden>Seleziona la tua specializzazione</option>
           <option value="fullstack">Fullstack</option>
           <option value="frontend">Frontend</option>
           <option value="backend">Backend</option>
           </select></div>
-        <div><input type='number' placeholder='Anni di esperienza'
-        value={exp}
-        onChange={(e) => setExp(e.target.value)}></input></div>
+        <div><input type='number' placeholder='Anni di esperienza' ref={expRef}></input></div>
         <div><textarea rows={5} cols={50} placeholder='Inserisci una tua breve descrizione'
         value={desc}
         onChange={(e) => setDesc(e.target.value)}></textarea>
